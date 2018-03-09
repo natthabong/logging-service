@@ -1,0 +1,19 @@
+server:
+  session:
+    cookie:
+      http-only: true
+      secure: true
+  port: 9345
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: gecadmin
+    key-store-Type: PKCS12
+    key-alias: gecscf
+spring:
+  application:
+    name: logging-service
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+    time-zone: Asia/Bangkok
