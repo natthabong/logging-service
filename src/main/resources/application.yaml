@@ -3,7 +3,7 @@ server:
     cookie:
       http-only: true
       secure: true
-  port: 9345
+  port: 9435
   ssl:
     enabled: true
     key-store: classpath:keystore.p12

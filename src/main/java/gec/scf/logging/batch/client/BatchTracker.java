@@ -4,8 +4,10 @@ public interface BatchTracker {
 
 	BatchTracker action(String action);
 
-	void track();
+	BatchTracker incomplete();
 
 	BatchTracker param(String name, String value);
+
+	void track();
 
 }

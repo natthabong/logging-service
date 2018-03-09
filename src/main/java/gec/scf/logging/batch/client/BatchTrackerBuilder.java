@@ -36,6 +36,8 @@ public class BatchTrackerBuilder {
 
 			String action;
 
+			boolean incomplete;
+
 			Map<String, String> parameters = new HashMap<>();
 
 			@Override
@@ -46,7 +48,8 @@ public class BatchTrackerBuilder {
 				payload.setProcessNo(Optional.ofNullable(processNo)
 						.orElse(UUID.randomUUID().toString()));
 				payload.setParameters(parameters);
-
+				payload.setCompleted(!incomplete);
+				incomplete = false;
 				client.writeBatchTracking(payload);
 			}
 
@@ -59,6 +62,12 @@ public class BatchTrackerBuilder {
 			@Override
 			public BatchTracker param(String name, String value) {
 				parameters.put(name, value);
+				return this;
+			}
+
+			@Override
+			public BatchTracker incomplete() {
+				this.incomplete = true;
 				return this;
 			}
 		};

@@ -13,6 +13,8 @@ public class BatchTrackingPayload implements Serializable {
 
 	private String action;
 
+	private boolean completed;
+
 	private Map<String, String> parameters;
 
 	public String getReferenceId() {
@@ -48,6 +50,15 @@ public class BatchTrackingPayload implements Serializable {
 
 	public Map<String, String> getParameters() {
 		return parameters;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+
+	}
+
+	public boolean isCompleted() {
+		return completed;
 	}
 
 }
