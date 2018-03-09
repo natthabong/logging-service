@@ -17,3 +17,67 @@ spring:
     serialization:
       write_dates_as_timestamps: false
     time-zone: Asia/Bangkok
+  profiles:
+    active: exclusive
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+    time-zone: Asia/Bangkok
+  datasource:
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    max-wait: 10000
+    max-active: 377
+    max-idle: 233
+    min-idle: 89
+    test-while-idle: true
+    test-on-borrow: true
+    validation-query: SELECT 1
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 55000
+    remove-abandoned: true
+    remove-abandoned-timeout: 55
+  jpa:
+    naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    generate-ddl: false
+    hibernate:
+      dll-auto: none
+logging:
+  level:
+    org.springframework:
+      security: DEBUG
+      session: TRACE
+    org.hibernate:
+      SQL: DEBUG
+      type:
+        descriptor:
+          sql:
+            BasicBinder: TRACE
+flyway:
+  enabled: true
+db:
+  host: ${DB_HOST}
+  name: ${DB_NAME}
+  
+---
+
+spring:
+  profiles: exclusive
+  datasource:
+    url: jdbc:sqlserver://;serverName=${db.host};portNumber=${db.port};databaseName=${db.name};
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway:
+  locations: classpath:db/migration/mssql     
+db:
+  port: 1433  
+---
+
+spring:
+  profiles: cloud
+  datasource:
+    url: jdbc:mysql://${db.host}:${db.port}/${db.name}
+    driver-class-name: com.mysql.jdbc.Driver
+flyway:
+  locations: classpath:db/migration/mysql
+db:
+  port: 3306 

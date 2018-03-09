@@ -81,6 +81,23 @@ public class BatchTrackerTest {
 		assertEquals("bigc.txt", actualBatchTracking.getParameters().get("fileName"));
 	}
 
+	@Test
+	public void write_action_when_incomplete() {
+		// Arrange
+		ArgumentCaptor<BatchTrackingPayload> captor = ArgumentCaptor
+				.forClass(BatchTrackingPayload.class);
+
+		BatchTracker batchTracker = batchTrackingBuilder.referenceId("J01").build();
+
+		// Actual
+		batchTracker.action("DOWNLOAD_FILE_INCOMPLETED").incomplete().track();
+
+		// Assert
+		verify(loggingClient, times(1)).writeBatchTracking(captor.capture());
+		BatchTrackingPayload actualBatchTracking = captor.getValue();
+		assertThat(actualBatchTracking.isCompleted(), is(false));
+	}
+
 	@TestConfiguration
 	static class BatchTrackingBuilderTestConfiguration {
 

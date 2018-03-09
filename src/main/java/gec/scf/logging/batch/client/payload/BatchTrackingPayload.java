@@ -13,7 +13,7 @@ public class BatchTrackingPayload implements Serializable {
 
 	private String action;
 
-	private boolean completed;
+	boolean completed;
 
 	private Map<String, String> parameters;
 
