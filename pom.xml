@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
 	</properties>
 
 	<dependencies>
@@ -105,6 +106,23 @@
 								<include>**/client/**/*</include>
 							</includes>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

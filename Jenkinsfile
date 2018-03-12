@@ -24,6 +24,18 @@ pipeline {
         sh "mvn sonar:sonar -P sonar-coverage -Dsonar.host.url=http://${sonar_host}:9000 -Dsonar.junit.reportPaths=target/surefire-reports -Dsonar.analysis.buildNumber=${BUILD_NUMBER}"
       }
     }
+    stage('[DOCKER] Build an image') {
+      steps {
+        sh "docker build -t logging-service:${image_tag} - < target/logging-service-0.1-SNAPSHOT-bin.tar.gz"
+        sh "docker tag logging-service:${image_tag} registry-gecscf.gec.io:5000/logging-service:${image_tag}"
+      }
+    }
+    stage('[DOCKER] Shift an image to private registry') {
+      steps {
+        sh 'docker login registry-gecscf.gec.io:5000 -u gecscf -p gecscf123!'
+        sh "docker push registry-gecscf.gec.io:5000/logging-service:${image_tag}"
+      }
+    }
   }
   post { 
     always { 
