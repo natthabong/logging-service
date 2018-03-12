@@ -38,6 +38,9 @@ public class BatchTracking extends BatchTrackingPayload {
 	private LocalDateTime actionTime;
 
 	private String node;
+	
+	@Column(name = "ip_address")
+	private String ipAddress;
 
 	public LocalDateTime getActionTime() {
 		return actionTime;
@@ -106,6 +109,14 @@ public class BatchTracking extends BatchTrackingPayload {
 
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 }

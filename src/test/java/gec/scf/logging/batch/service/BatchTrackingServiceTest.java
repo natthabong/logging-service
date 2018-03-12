@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
 import gec.scf.logging.batch.domain.BatchTrackingRepository;
 
@@ -73,6 +78,25 @@ public class BatchTrackingServiceTest {
 		assertThat(actualBatchTracking.getReferenceId(), is("J42"));
 
 	}
+	
+//	@Test
+//	public void should_get_batch_trackings() {
+//		// Arrange
+//		BatchTrackingCriteria batchTrackingCriteria = mock(BatchTrackingCriteria.class);
+//		BDDMockito.given(batchTrackingCriteria.getId()).willReturn("J01");
+//		BDDMockito.given(batchTrackingCriteria.getProcessNo()).willReturn("P01");
+//		BDDMockito.given(batchTrackingCriteria.getLogDateFrom()).willReturn(new Date());
+//		BDDMockito.given(batchTrackingCriteria.getLogDateTo()).willReturn(new Date());
+//		//BDDMockito.given(batchTracking.getPageable()).willReturn(new P);
+//		
+//		// Actual
+//		batchTrackingService.getBatchTrackings(batchTrackingCriteria);
+//
+//		// Assert
+//		verify(batchTrackingRepository, times(1)).findAll(any(),batchTrackingCriteria.getPageable());
+//
+//	}
+
 
 	@TestConfiguration
 	static class BatchTrackingServiceConfiguration {
