@@ -1,11 +1,17 @@
 package gec.scf.logging.batch.domain;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -31,6 +37,12 @@ public class BatchTracking extends BatchTrackingPayload {
 	private String processNo;
 
 	private String action;
+
+	@ElementCollection
+	@JoinTable(name = "tbl_batch_tracking_parameters", joinColumns = @JoinColumn(name = "id"))
+	@MapKeyColumn(name = "param_key")
+	@Column(name = "param_value")
+	private Map<String, String> parameters = new HashMap<String, String>();
 
 	@Column(name = "is_completed")
 	private boolean completed;
@@ -74,6 +86,14 @@ public class BatchTracking extends BatchTrackingPayload {
 
 		return batchTracking;
 
+	}
+
+	public Map<String, String> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Map<String, String> parameters) {
+		this.parameters = parameters;
 	}
 
 	public String getReferenceId() {
