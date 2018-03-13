@@ -49,8 +49,10 @@ public class BatchTrackerBuilder {
 						.orElse(UUID.randomUUID().toString()));
 				payload.setParameters(parameters);
 				payload.setCompleted(!incomplete);
-				incomplete = false;
 				client.writeBatchTracking(payload);
+				action = null;
+				parameters = new HashMap<>();
+				incomplete = false;
 			}
 
 			@Override
