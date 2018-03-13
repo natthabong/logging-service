@@ -2,7 +2,6 @@ package gec.scf.logging.batch.service;
 
 import static gec.scf.logging.batch.util.SpecificationUtils.between;
 import static gec.scf.logging.batch.util.SpecificationUtils.eq;
-import static gec.scf.logging.batch.util.SpecificationUtils.like;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
 import gec.scf.logging.batch.domain.BatchTrackingRepository;
+import gec.scf.logging.batch.util.SpecificationUtils;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -32,15 +32,20 @@ public class BatchTrackingServiceImpl implements BatchTrackingService {
 		return Mono.just(batchTrackingRepository.save(batchTracking));
 	}
 
+	@Transactional(readOnly = true)
 	@Override
-	public Page<BatchTracking> getBatchTrackings(final BatchTrackingCriteria batchTrackingCriteria) {
+	public Page<BatchTracking> getBatchTrackings(
+			final BatchTrackingCriteria batchTrackingCriteria) {
 
-		Specification<BatchTracking> specifications = 
-			  where(like(BatchTracking.class, "id", batchTrackingCriteria.getId()))
-			 .and(eq(BatchTracking.class, "processNo", batchTrackingCriteria.getProcessNo()))
-			 .and(between(BatchTracking.class, "actionTime", batchTrackingCriteria.getLogDateFrom(), batchTrackingCriteria.getLogDateTo()));
-		
-		Page<BatchTracking> remittanceAdvices = batchTrackingRepository.findAll(specifications,batchTrackingCriteria.getPageable());
+		// @formatter:off
+		Specification<BatchTracking> specifications = where(SpecificationUtils.
+		     <BatchTracking>like("id", batchTrackingCriteria.getId()))
+						 .and(eq("processNo", batchTrackingCriteria.getProcessNo()))
+						.and(between("actionTime", batchTrackingCriteria.getLogDateFrom(),
+												   batchTrackingCriteria.getLogDateTo()));
+		// @formatter:on
+		Page<BatchTracking> remittanceAdvices = batchTrackingRepository
+				.findAll(specifications, batchTrackingCriteria.getPageable());
 		return remittanceAdvices;
 	}
 

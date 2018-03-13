@@ -16,8 +16,18 @@ public class SpecificationUtils {
 
 	private static final char ESCAPED_WILDCARD_CHAR = '\\';
 
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #like()}
+	 */
+	@Deprecated
 	public static <V> Specification<V> like(Class<V> clazz, String fieldName,
 			String value) {
+
+		return like(fieldName, value);
+
+	}
+
+	public static <V> Specification<V> like(String fieldName, String value) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -31,8 +41,17 @@ public class SpecificationUtils {
 
 	}
 
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #eq()}
+	 */
+	@Deprecated
 	public static <V, E> Specification<V> eq(Class<V> clazz, final String fieldName,
 			final E value) {
+
+		return eq(fieldName, value);
+	}
+
+	public static <V, E> Specification<V> eq(final String fieldName, final E value) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -41,20 +60,30 @@ public class SpecificationUtils {
 
 		};
 	}
-	
+
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #notEqual()}
+	 */
+	@Deprecated
 	public static <V, E> Specification<V> notEqual(Class<V> clazz, final String fieldName,
+			final E value) {
+
+		return notEqual(fieldName, value);
+	}
+
+	public static <V, E> Specification<V> notEqual(final String fieldName,
 			final E value) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
 			return Optional.ofNullable(value)
-					.map(val -> cb.notEqual(root.<E>get(fieldName), val)).orElse(exclude());
+					.map(val -> cb.notEqual(root.<E>get(fieldName), val))
+					.orElse(exclude());
 
 		};
 	}
 
-	public static <V> Specification<V> between(Class<V> clazz, final String fieldName,
-			final Date from, final Date to) {
+	public static <V> Specification<V> between(String fieldName, Date from, Date to) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -93,9 +122,29 @@ public class SpecificationUtils {
 				return predicateTo;
 			}
 		};
+
 	}
 
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #between()}
+	 */
+	@Deprecated
+	public static <V> Specification<V> between(Class<V> clazz, final String fieldName,
+			final Date from, final Date to) {
+		return between(fieldName, from, to);
+	}
+
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #lessThanOrEqual()}
+	 */
+	@Deprecated
 	public static <V> Specification<V> lessThanOrEqual(Class<V> clazz, String fieldName,
+			Date targetDate) {
+
+		return lessThanOrEqual(fieldName, targetDate);
+	}
+
+	public static <V> Specification<V> lessThanOrEqual(String fieldName,
 			Date targetDate) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
@@ -107,7 +156,16 @@ public class SpecificationUtils {
 		};
 	}
 
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #lessThan()}
+	 */
+	@Deprecated
 	public static <V> Specification<V> lessThan(Class<V> clazz, final String fieldName,
+			final Date targetDate) {
+		return lessThan(fieldName, targetDate);
+	}
+
+	public static <V> Specification<V> lessThan(final String fieldName,
 			final Date targetDate) {
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -118,22 +176,16 @@ public class SpecificationUtils {
 		};
 	}
 
-//	public static <V, E> Specification<V> in(Class<V> clazz, final String fieldName,
-//			final Collection<E> values) {
-//
-//		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-//
-//			Predicate predicate = null;
-//			if (CollectionUtils.isNotEmpty(values)) {
-//				predicate = cb.in(root.<Collection<E>>get(fieldName)).value(values);
-//			}
-//			return predicate;
-//
-//		};
-//
-//	}
-
+	/**
+	 * @Deprecated As of iteration 48, replaced by {@link #isNull()}
+	 */
+	@Deprecated
 	public static <V> Specification<V> isNull(Class<V> clazz, final String fieldName) {
+
+		return isNull(fieldName);
+	}
+
+	public static <V> Specification<V> isNull(final String fieldName) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -141,18 +193,6 @@ public class SpecificationUtils {
 
 		};
 	}
-
-//	public static <V> Specification<V> dependOnFunding(Class<V> clazz,
-//			final String fieldName) {
-//
-//		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-//
-//			SecurityUser user = SecurityUtils.getUser();
-//
-//			return cb.equal(root.get(fieldName), user.getFundingId());
-//
-//		};
-//	}
 
 	private static String escapedWildcardValue(String value) {
 		// Escape -> [] _ % ^
@@ -184,4 +224,5 @@ public class SpecificationUtils {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
+
 }
