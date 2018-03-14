@@ -42,6 +42,7 @@ spring:
     generate-ddl: false
     hibernate:
       dll-auto: none
+      enable-lazy-load-no-trans: true
 logging:
   level:
     org.springframework:

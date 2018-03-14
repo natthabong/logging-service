@@ -1,12 +1,12 @@
 package gec.scf.logging.batch.domain;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -15,6 +15,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 
@@ -38,27 +39,28 @@ public class BatchTracking extends BatchTrackingPayload {
 
 	private String action;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_batch_tracking_parameters", joinColumns = @JoinColumn(name = "id"))
 	@MapKeyColumn(name = "param_key")
 	@Column(name = "param_value")
-	private Map<String, String> parameters = new HashMap<String, String>();
+	@Type(type = "java.lang.String")
+	private Map<String, Object> parameters;
 
 	@Column(name = "is_completed")
 	private boolean completed;
 
-	private LocalDateTime actionTime;
+	private ZonedDateTime actionTime;
 
 	private String node;
 
 	@Column(name = "ip_address")
 	private String ipAddress;
 
-	public LocalDateTime getActionTime() {
+	public ZonedDateTime getActionTime() {
 		return actionTime;
 	}
 
-	public void setActionTime(LocalDateTime actionTime) {
+	public void setActionTime(ZonedDateTime actionTime) {
 		this.actionTime = actionTime;
 	}
 
@@ -91,11 +93,11 @@ public class BatchTracking extends BatchTrackingPayload {
 
 	}
 
-	public Map<String, String> getParameters() {
+	public Map<String, Object> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(Map<String, String> parameters) {
+	public void setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 	}
 

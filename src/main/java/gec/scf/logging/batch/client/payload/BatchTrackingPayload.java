@@ -15,7 +15,7 @@ public class BatchTrackingPayload implements Serializable {
 
 	boolean completed;
 
-	private Map<String, String> parameters;
+	private Map<String, Object> parameters;
 
 	public String getReferenceId() {
 		return referenceId;
@@ -43,13 +43,12 @@ public class BatchTrackingPayload implements Serializable {
 		return action;
 	}
 
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
-
+	public Map<String, Object> getParameters() {
+		return parameters;
 	}
 
-	public Map<String, String> getParameters() {
-		return parameters;
+	public void setParameters(Map<String, Object> parameters) {
+		this.parameters = parameters;
 	}
 
 	public void setCompleted(boolean completed) {

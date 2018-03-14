@@ -103,7 +103,7 @@ public class BatchTrackerTest {
 
 		@Bean
 		BatchTrackerBuilder batchTrackingBuilder(@Autowired LoggingClient loggingClient) {
-			return new BatchTrackerBuilder(loggingClient);
+			return BatchTrackerBuilder.builder(loggingClient);
 
 		}
 	}

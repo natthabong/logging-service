@@ -16,7 +16,11 @@ public class BatchTrackerBuilder {
 
 	private LoggingClient client;
 
-	public BatchTrackerBuilder(LoggingClient client) {
+	public static BatchTrackerBuilder builder(LoggingClient client) {
+		return new BatchTrackerBuilder(client);
+	}
+
+	private BatchTrackerBuilder(LoggingClient client) {
 		this.client = client;
 	}
 
@@ -38,7 +42,7 @@ public class BatchTrackerBuilder {
 
 			boolean incomplete;
 
-			Map<String, String> parameters = new HashMap<>();
+			Map<String, Object> parameters = new HashMap<>();
 
 			@Override
 			public void track() {

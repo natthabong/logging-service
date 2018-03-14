@@ -1,6 +1,6 @@
 package gec.scf.logging.batch.service;
 
-import static gec.scf.logging.batch.util.SpecificationUtils.between;
+import static gec.scf.logging.batch.util.SpecificationUtils.*;
 import static gec.scf.logging.batch.util.SpecificationUtils.eq;
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -39,9 +39,9 @@ public class BatchTrackingServiceImpl implements BatchTrackingService {
 
 		// @formatter:off
 		Specification<BatchTracking> specifications = where(SpecificationUtils.
-		     <BatchTracking>like("id", batchTrackingCriteria.getId()))
+		     <BatchTracking>like("referenceId", batchTrackingCriteria.getReferenceId()))
 						 .and(eq("processNo", batchTrackingCriteria.getProcessNo()))
-						.and(between("actionTime", batchTrackingCriteria.getLogDateFrom(),
+						.and(timeBetween("actionTime", batchTrackingCriteria.getLogDateFrom(),
 												   batchTrackingCriteria.getLogDateTo()));
 		// @formatter:on
 		Page<BatchTracking> remittanceAdvices = batchTrackingRepository

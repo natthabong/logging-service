@@ -1,34 +1,28 @@
 package gec.scf.logging.batch.criteria;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 public class BatchTrackingCriteria {
 
-	private String id;
+	private String referenceId;
 
 	private String processNo;
 
-	private Date logDateFrom;
+	private ZonedDateTime logDateFrom;
 
-	private Date logDateTo;
-	
-	private Integer offset;
+	private ZonedDateTime logDateTo;
 
-	private Integer limit;
+	private int page;
+
+	private int size;
 
 	private Sort sorting;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getProcessNo() {
 		return processNo;
@@ -38,36 +32,20 @@ public class BatchTrackingCriteria {
 		this.processNo = processNo;
 	}
 
-	public Date getLogDateFrom() {
-		return logDateFrom;
+	public int getPage() {
+		return page;
 	}
 
-	public void setLogDateFrom(Date logDateFrom) {
-		this.logDateFrom = logDateFrom;
+	public void setPage(int page) {
+		this.page = page;
 	}
 
-	public Date getLogDateTo() {
-		return logDateTo;
+	public Integer getSize() {
+		return size;
 	}
 
-	public void setLogDateTo(Date logDateTo) {
-		this.logDateTo = logDateTo;
-	}
-
-	public Integer getOffset() {
-		return offset;
-	}
-
-	public void setOffset(Integer offset) {
-		this.offset = offset;
-	}
-
-	public Integer getLimit() {
-		return limit;
-	}
-
-	public void setLimit(Integer limit) {
-		this.limit = limit;
+	public void setSize(Integer size) {
+		this.size = size;
 	}
 
 	public Sort getSorting() {
@@ -77,9 +55,34 @@ public class BatchTrackingCriteria {
 	public void setSorting(Sort sorting) {
 		this.sorting = sorting;
 	}
-	
-	public Pageable getPageable() {
-		return PageRequest.of(offset, limit, sorting);
+
+	public ZonedDateTime getLogDateFrom() {
+		return logDateFrom;
 	}
-	
+
+	public void setLogDateFrom(ZonedDateTime logDateFrom) {
+		this.logDateFrom = logDateFrom;
+	}
+
+	public ZonedDateTime getLogDateTo() {
+		return logDateTo;
+	}
+
+	public void setLogDateTo(ZonedDateTime logDateTo) {
+		this.logDateTo = logDateTo;
+	}
+
+	public Pageable getPageable() {
+		return PageRequest.of(page, size, Optional.ofNullable(sorting)
+				.orElse(Sort.by(Direction.DESC, "actionTime")));
+	}
+
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
+	}
+
+	public String getReferenceId() {
+		return referenceId;
+	}
+
 }
