@@ -96,8 +96,7 @@ public class BatchTrackingControllerTest {
 		batchTracking.setProcessNo("PID01");
 		batchTracking.setAction("START_BATCH_JOB_IMPORT_FILE");
 		LocalDateTime requestTime = LocalDateTime.of(2018, 5, 22, 23, 50);
-		batchTracking
-				.setActionTime(ZonedDateTime.of(requestTime, ZoneId.systemDefault()));
+		batchTracking.setActionTime(requestTime);
 		batchTracking.setCompleted(true);
 		batchTracking.setNode("Batch");
 		batchTracking.setIpAddress("127.0.0.1");
@@ -132,8 +131,7 @@ public class BatchTrackingControllerTest {
 		batchTracking.setProcessNo("PID01");
 		batchTracking.setAction("START_BATCH_JOB_IMPORT_FILE");
 		LocalDateTime requestTime = LocalDateTime.of(2018, 5, 22, 23, 50);
-		batchTracking
-				.setActionTime(ZonedDateTime.of(requestTime, ZoneId.systemDefault()));
+		batchTracking.setActionTime(requestTime);
 		batchTracking.setCompleted(true);
 		batchTracking.setNode("Batch");
 		batchTracking.setIpAddress("127.0.0.1");

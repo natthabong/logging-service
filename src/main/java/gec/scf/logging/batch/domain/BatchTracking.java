@@ -1,6 +1,6 @@
 package gec.scf.logging.batch.domain;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -49,18 +49,18 @@ public class BatchTracking extends BatchTrackingPayload {
 	@Column(name = "is_completed")
 	private boolean completed;
 
-	private ZonedDateTime actionTime;
+	private LocalDateTime actionTime;
 
 	private String node;
 
 	@Column(name = "ip_address")
 	private String ipAddress;
 
-	public ZonedDateTime getActionTime() {
+	public LocalDateTime getActionTime() {
 		return actionTime;
 	}
 
-	public void setActionTime(ZonedDateTime actionTime) {
+	public void setActionTime(LocalDateTime actionTime) {
 		this.actionTime = actionTime;
 	}
 

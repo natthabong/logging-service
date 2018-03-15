@@ -1,7 +1,7 @@
 package gec.scf.logging.batch.rest;
 
 import java.net.URISyntaxException;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +43,7 @@ public class BatchTrackingController {
 
 		BatchTracking batchTracking = BatchTracking.newInstanceFrom(payload);
 		batchTracking.setActionTime(
-				ZonedDateTime.parse(requestTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+				LocalDateTime.parse(requestTime, DateTimeFormatter.ISO_DATE_TIME));
 		batchTracking.setNode(node);
 		batchTracking.setIpAddress(ipAddressOf(request));
 
@@ -62,15 +62,15 @@ public class BatchTrackingController {
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer size) throws URISyntaxException {
 
-		final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+		final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
 		BatchTrackingCriteria batchTrackingCriteria = new BatchTrackingCriteria();
 		batchTrackingCriteria.setReferenceId(referenceId);
 		batchTrackingCriteria.setLogDateFrom(Optional.ofNullable(logDateFrom)
-				.map(date -> ZonedDateTime.parse(date, formatter)).orElse(null));
+				.map(date -> LocalDateTime.parse(date, formatter)).orElse(null));
 
 		batchTrackingCriteria.setLogDateTo(Optional.ofNullable(logDateTo)
-				.map(date -> ZonedDateTime.parse(date, formatter)).orElse(null));
+				.map(date -> LocalDateTime.parse(date, formatter)).orElse(null));
 		batchTrackingCriteria.setProcessNo(processNo);
 		batchTrackingCriteria.setPage(Optional.ofNullable(page).orElse(0));
 		batchTrackingCriteria

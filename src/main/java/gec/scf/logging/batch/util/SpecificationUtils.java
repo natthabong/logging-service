@@ -1,6 +1,6 @@
 package gec.scf.logging.batch.util;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -50,24 +50,23 @@ public class SpecificationUtils {
 		};
 	}
 
-	public static <V> Specification<V> timeBetween(String fieldName, ZonedDateTime from,
-			ZonedDateTime to) {
+	public static <V> Specification<V> timeBetween(String fieldName, LocalDateTime from,
+			LocalDateTime to) {
 
 		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
 			Predicate predicateFrom = null;
 			if (from != null) {
-
-				from.withHour(0).withMinute(0).withSecond(0).withNano(0);
+				LocalDateTime fromTime = to.plusMinutes(1).withSecond(0).withNano(0);
 				predicateFrom = cb.greaterThanOrEqualTo(
-						root.<ZonedDateTime>get(fieldName), cb.literal(from));
+						root.<LocalDateTime>get(fieldName), cb.literal(fromTime));
 			}
 
 			Predicate predicateTo = null;
 			if (to != null) {
-				to.withHour(0).withMinute(0).withSecond(0).withNano(0).plusDays(1);
-				predicateTo = cb.lessThan(root.<ZonedDateTime>get(fieldName),
-						cb.literal(to));
+				LocalDateTime toTime = to.plusMinutes(1).withSecond(0).withNano(0);
+				predicateTo = cb.lessThan(root.<LocalDateTime>get(fieldName),
+						cb.literal(toTime));
 			}
 			if (from != null && to != null) {
 				return cb.and(predicateFrom, predicateTo);

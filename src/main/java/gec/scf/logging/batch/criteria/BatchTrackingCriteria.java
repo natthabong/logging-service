@@ -1,6 +1,6 @@
 package gec.scf.logging.batch.criteria;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -14,9 +14,9 @@ public class BatchTrackingCriteria {
 
 	private String processNo;
 
-	private ZonedDateTime logDateFrom;
+	private LocalDateTime logDateFrom;
 
-	private ZonedDateTime logDateTo;
+	private LocalDateTime logDateTo;
 
 	private int page;
 
@@ -56,19 +56,19 @@ public class BatchTrackingCriteria {
 		this.sorting = sorting;
 	}
 
-	public ZonedDateTime getLogDateFrom() {
+	public LocalDateTime getLogDateFrom() {
 		return logDateFrom;
 	}
 
-	public void setLogDateFrom(ZonedDateTime logDateFrom) {
+	public void setLogDateFrom(LocalDateTime logDateFrom) {
 		this.logDateFrom = logDateFrom;
 	}
 
-	public ZonedDateTime getLogDateTo() {
+	public LocalDateTime getLogDateTo() {
 		return logDateTo;
 	}
 
-	public void setLogDateTo(ZonedDateTime logDateTo) {
+	public void setLogDateTo(LocalDateTime logDateTo) {
 		this.logDateTo = logDateTo;
 	}
 

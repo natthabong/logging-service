@@ -1,16 +1,14 @@
 package gec.scf.logging.batch.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -89,10 +87,8 @@ public class BatchTrackingServiceTest {
 		BatchTrackingCriteria batchTrackingCriteria = mock(BatchTrackingCriteria.class);
 		given(batchTrackingCriteria.getReferenceId()).willReturn("J01");
 		given(batchTrackingCriteria.getProcessNo()).willReturn("P01");
-		given(batchTrackingCriteria.getLogDateFrom()).willReturn(ZonedDateTime
-				.of(LocalDateTime.of(2018, 10, 10, 12, 15), ZoneId.systemDefault()));
-		given(batchTrackingCriteria.getLogDateTo()).willReturn(ZonedDateTime
-				.of(LocalDateTime.of(2018, 10, 10, 15, 30), ZoneId.systemDefault()));
+		given(batchTrackingCriteria.getLogDateFrom()).willReturn(LocalDateTime.of(2018, 10, 10, 12, 15));
+		given(batchTrackingCriteria.getLogDateTo()).willReturn(LocalDateTime.of(2018, 10, 10, 15, 30));
 
 		Pageable pageRequest = PageRequest.of(0, 20);
 		given(batchTrackingCriteria.getPageable()).willReturn(pageRequest);
