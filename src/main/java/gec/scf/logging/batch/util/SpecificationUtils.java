@@ -57,7 +57,7 @@ public class SpecificationUtils {
 
 			Predicate predicateFrom = null;
 			if (from != null) {
-				LocalDateTime fromTime = to.plusMinutes(1).withSecond(0).withNano(0);
+				LocalDateTime fromTime = from.withSecond(0).withNano(0);
 				predicateFrom = cb.greaterThanOrEqualTo(
 						root.<LocalDateTime>get(fieldName), cb.literal(fromTime));
 			}
