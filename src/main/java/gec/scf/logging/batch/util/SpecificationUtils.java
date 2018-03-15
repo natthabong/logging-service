@@ -38,18 +38,6 @@ public class SpecificationUtils {
 		};
 	}
 
-	public static <V, E> Specification<V> notEqual(final String fieldName,
-			final E value) {
-
-		return (Root<V> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-
-			return Optional.ofNullable(value)
-					.map(val -> cb.notEqual(root.<E>get(fieldName), val))
-					.orElse(exclude());
-
-		};
-	}
-
 	public static <V> Specification<V> timeBetween(String fieldName, LocalDateTime from,
 			LocalDateTime to) {
 
@@ -83,11 +71,9 @@ public class SpecificationUtils {
 
 	private static String escapedWildcardValue(String value) {
 		// Escape -> [] _ % ^
-		value = value.replaceAll("[\\[]", "\\\\[");
-		value = value.replaceAll("[\\]]", "\\\\]");
-		value = value.replaceAll("[_]", "\\\\_");
-		value = value.replaceAll("[%]", "\\\\%");
-		value = value.replaceAll("[\\^]", "\\\\^");
+		value = value.replaceAll("[\\[]", "\\\\[").replaceAll("[\\]]", "\\\\]")
+				.replaceAll("[_]", "\\\\_").replaceAll("[%]", "\\\\%")
+				.replaceAll("[\\^]", "\\\\^");
 		return value;
 	}
 
