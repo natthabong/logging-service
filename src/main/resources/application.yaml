@@ -67,8 +67,8 @@ spring:
   datasource:
     url: jdbc:sqlserver://;serverName=${db.host};portNumber=${db.port};databaseName=${db.name};
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-flyway:
-  locations: classpath:db/migration/mssql     
+  flyway:
+    locations: classpath:db/migration/common, classpath:db/migration/mssql     
 db:
   port: 1433  
 ---
@@ -78,7 +78,7 @@ spring:
   datasource:
     url: jdbc:mysql://${db.host}:${db.port}/${db.name}
     driver-class-name: com.mysql.jdbc.Driver
-flyway:
-  locations: classpath:db/migration/mysql
+  flyway:
+    locations: classpath:db/migration/common, classpath:db/migration/mysql
 db:
   port: 3306 
