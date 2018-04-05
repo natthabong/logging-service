@@ -42,7 +42,24 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
+		<!-- Use MySQL Connector-J -->
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<dependency>
+				<groupId>com.microsoft.sqlserver</groupId>
+				<artifactId>mssql-jdbc</artifactId>
+				<scope>runtime</scope>
+				<exclusions>
+					<exclusion>
+						<!-- Duplicate with jasper library -->
+						<groupId>org.bouncycastle</groupId>
+						<artifactId>bcprov-jdk15on</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -53,38 +70,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>exclusive</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.microsoft.sqlserver</groupId>
-					<artifactId>mssql-jdbc</artifactId>
-					<scope>runtime</scope>
-					<exclusions>
-						<exclusion>
-							<!-- Duplicate with jasper library -->
-							<groupId>org.bouncycastle</groupId>
-							<artifactId>bcprov-jdk15on</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cloud</id>
-			<dependencies>
-				<!-- Use MySQL Connector-J -->
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 	<build>
 		<plugins>
 			<plugin>
