@@ -1,6 +1,7 @@
 package gec.scf.logging.batch.client.payload;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public class BatchTrackingPayload implements Serializable {
@@ -16,6 +17,8 @@ public class BatchTrackingPayload implements Serializable {
 	boolean completed;
 
 	private Map<String, Object> parameters;
+
+	private List<? extends BatchTrackingItemPayload> items;
 
 	public String getReferenceId() {
 		return referenceId;
@@ -58,6 +61,14 @@ public class BatchTrackingPayload implements Serializable {
 
 	public boolean isCompleted() {
 		return completed;
+	}
+
+	public List<? extends BatchTrackingItemPayload> getItems() {
+		return items;
+	}
+
+	public void setItems(List<? extends BatchTrackingItemPayload> items) {
+		this.items = items;
 	}
 
 }

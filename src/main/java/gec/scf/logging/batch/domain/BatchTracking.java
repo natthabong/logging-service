@@ -1,8 +1,12 @@
 package gec.scf.logging.batch.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -12,11 +16,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gec.scf.logging.batch.View;
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 
 @Entity
@@ -31,14 +39,19 @@ public class BatchTracking extends BatchTrackingPayload {
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@JsonView({ View.Full.class, View.Partial.class })
 	private String id;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	private String referenceId;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	private String processNo;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	private String action;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_batch_tracking_parameters", joinColumns = @JoinColumn(name = "id"))
 	@MapKeyColumn(name = "param_key")
@@ -46,15 +59,23 @@ public class BatchTracking extends BatchTrackingPayload {
 	@Type(type = "java.lang.String")
 	private Map<String, Object> parameters;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	@Column(name = "is_completed")
 	private boolean completed;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	private LocalDateTime actionTime;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	private String node;
 
+	@JsonView({ View.Full.class, View.Partial.class })
 	@Column(name = "ip_address")
 	private String ipAddress;
+
+	@JsonView({ View.Full.class })
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "batchTracking")
+	private List<BatchTrackingItem> items = new ArrayList<>();
 
 	public LocalDateTime getActionTime() {
 		return actionTime;
@@ -88,6 +109,19 @@ public class BatchTracking extends BatchTrackingPayload {
 		batchTracking.setAction(payload.getAction());
 		batchTracking.setCompleted(payload.isCompleted());
 		batchTracking.setParameters(payload.getParameters());
+
+		if (payload.getItems() != null) {
+			batchTracking.getItems().addAll(payload.getItems().stream().map(i -> {
+				BatchTrackingItem item = new BatchTrackingItem();
+				item.setActionTime(i.getActionTime());
+				item.setAction(i.getAction());
+				item.setCompleted(i.isCompleted());
+				item.setReferenceNo(i.getReferenceNo());
+				item.setTransactionNo(i.getTransactionNo());
+				item.setBatchTracking(batchTracking);
+				return item;
+			}).collect(Collectors.toList()));
+		}
 
 		return batchTracking;
 
@@ -139,6 +173,10 @@ public class BatchTracking extends BatchTrackingPayload {
 
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
+	}
+
+	public List<BatchTrackingItem> getItems() {
+		return items;
 	}
 
 }

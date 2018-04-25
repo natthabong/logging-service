@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gec.scf.logging.batch.View;
 import gec.scf.logging.batch.client.ServiceTypes;
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
@@ -35,6 +38,7 @@ public class BatchTrackingController {
 	@Autowired
 	private BatchTrackingService batchTrackingService;
 
+	@JsonView(View.Partial.class)
 	@PostMapping
 	public Mono<ResponseEntity<BatchTracking>> createBatchTracking(
 			@RequestHeader("X-Action-Time") String requestTime,
