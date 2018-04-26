@@ -60,6 +60,7 @@ public class BatchTrackingController {
 				.defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@JsonView(View.Partial.class)
 	@GetMapping
 	public ResponseEntity<?> getBatchTracking(
 			@RequestParam(required = false) String referenceId,
