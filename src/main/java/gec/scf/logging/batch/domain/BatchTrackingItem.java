@@ -31,8 +31,11 @@ public class BatchTrackingItem extends BatchTrackingItemPayload {
 	@JsonView({ View.Full.class, View.Partial.class })
 	private Long batchTrackingItemId;
 
+	@Column(name = "batch_tracking_id", insertable = false, updatable = false)
+	private String batchTrackingId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "batch_tracking_id", nullable = false)
+	@JoinColumn(name = "batch_tracking_id", referencedColumnName = "id", nullable = false)
 	private BatchTracking batchTracking;
 
 	@JsonView({ View.Full.class, View.Partial.class })
@@ -105,6 +108,14 @@ public class BatchTrackingItem extends BatchTrackingItemPayload {
 
 	public void setBatchTracking(BatchTracking batchTracking) {
 		this.batchTracking = batchTracking;
+	}
+
+	public String getBatchTrackingId() {
+		return batchTrackingId;
+	}
+
+	public void setBatchTrackingId(String batchTrackingId) {
+		this.batchTrackingId = batchTrackingId;
 	}
 
 }

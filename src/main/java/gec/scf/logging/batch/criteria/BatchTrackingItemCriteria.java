@@ -11,7 +11,7 @@ public class BatchTrackingItemCriteria {
 
 	private String batchTrackingId;
 
-	private boolean isCompleted;
+	private Boolean isCompleted;
 
 	private int page;
 
@@ -58,11 +58,11 @@ public class BatchTrackingItemCriteria {
 		this.batchTrackingId = batchTrackingId;
 	}
 
-	public boolean isCompleted() {
+	public Boolean isCompleted() {
 		return isCompleted;
 	}
 
-	public void setCompleted(boolean isCompleted) {
+	public void setCompleted(Boolean isCompleted) {
 		this.isCompleted = isCompleted;
 	}
 

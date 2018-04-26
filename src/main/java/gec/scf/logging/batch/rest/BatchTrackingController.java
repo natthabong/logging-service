@@ -112,7 +112,7 @@ public class BatchTrackingController {
 	@JsonView(View.Partial.class)
 	@RequestMapping(value = "/{batchTrackingId}/details", method = RequestMethod.GET)
 	public ResponseEntity<?> getBatchTrackingItems(@PathVariable String batchTrackingId,
-			@RequestParam(required = false) boolean completed,
+			@RequestParam(required = false) Boolean completed,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer size) throws URISyntaxException {
 
