@@ -28,6 +28,7 @@ import gec.scf.logging.batch.View;
 import gec.scf.logging.batch.client.ServiceTypes;
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
+import gec.scf.logging.batch.criteria.BatchTrackingItemCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
 import gec.scf.logging.batch.domain.BatchTrackingItem;
 import gec.scf.logging.batch.service.BatchTrackingService;
@@ -109,13 +110,27 @@ public class BatchTrackingController {
 	}
 	
 	@JsonView(View.Partial.class)
-	@RequestMapping(value = "/{batchTrackingId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{batchTrackingId}/details", method = RequestMethod.GET)
 	public ResponseEntity<?> getBatchTrackingItems(@PathVariable String batchTrackingId,
-			@RequestParam(required = true) boolean completed) {
+			@RequestParam(required = false) boolean completed,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) throws URISyntaxException {
 
-		List<BatchTrackingItem> batchTrackingItems = batchTrackingService.getBatchTrackingItems(batchTrackingId,
-				completed);
+		BatchTrackingItemCriteria batchTrackingItemCriteria = new BatchTrackingItemCriteria();
+		batchTrackingItemCriteria.setBatchTrackingId(batchTrackingId);
+		batchTrackingItemCriteria.setCompleted(completed);
+		batchTrackingItemCriteria.setPage(Optional.ofNullable(page).orElse(0));
+		batchTrackingItemCriteria
+				.setSize(Optional.ofNullable(size).orElse(Integer.MAX_VALUE));
 
-		return new ResponseEntity<>(batchTrackingItems, HttpStatus.OK);
+		Page<BatchTrackingItem> batchTrackingItemPages = batchTrackingService
+				.getBatchTrackingItems(batchTrackingItemCriteria);
+
+		List<BatchTrackingItem> batchTrackingItems = batchTrackingItemPages.getContent();
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
+				batchTrackingItemPages, batchTrackingItemPages.getNumber(),
+				batchTrackingItemPages.getSize());
+
+		return new ResponseEntity<>(batchTrackingItems, headers, HttpStatus.OK);
 	}
 }

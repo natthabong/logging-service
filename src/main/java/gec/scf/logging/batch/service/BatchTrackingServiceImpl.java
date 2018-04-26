@@ -4,8 +4,6 @@ import static gec.scf.logging.batch.util.SpecificationUtils.eq;
 import static gec.scf.logging.batch.util.SpecificationUtils.timeBetween;
 import static org.springframework.data.jpa.domain.Specification.where;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
+import gec.scf.logging.batch.criteria.BatchTrackingItemCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
 import gec.scf.logging.batch.domain.BatchTrackingItem;
 import gec.scf.logging.batch.domain.BatchTrackingItemRepository;
@@ -59,10 +58,15 @@ public class BatchTrackingServiceImpl implements BatchTrackingService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<BatchTrackingItem> getBatchTrackingItems(String batchTrackingId, boolean isCompleted) {
+	public Page<BatchTrackingItem> getBatchTrackingItems(final BatchTrackingItemCriteria batchTrackingItemCriteria) {
 
-		List<BatchTrackingItem> batchTrackingItems = batchTrackingItemRepository
-				.findByBatchTrackingIdAndCompleted(batchTrackingId, isCompleted);
+		// @formatter:off
+		Specification<BatchTrackingItem> specifications = where(
+				SpecificationUtils.<BatchTrackingItem>like("batchTrackingId", batchTrackingItemCriteria.getBatchTrackingId()))
+						.and(eq("completed", batchTrackingItemCriteria.isCompleted()));
+		// @formatter:on
+		Page<BatchTrackingItem> batchTrackingItems = batchTrackingItemRepository.findAll(specifications,
+				batchTrackingItemCriteria.getPageable());
 
 		return batchTrackingItems;
 	}

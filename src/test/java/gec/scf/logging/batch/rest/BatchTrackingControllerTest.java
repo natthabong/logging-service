@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +32,7 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
+import gec.scf.logging.batch.criteria.BatchTrackingItemCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
 import gec.scf.logging.batch.domain.BatchTrackingItem;
 import gec.scf.logging.batch.service.BatchTrackingService;
@@ -180,22 +180,25 @@ public class BatchTrackingControllerTest {
 		BatchTrackingItem batchTrackingItem1 = new BatchTrackingItem();
 		batchTrackingItem1.setBatchTracking(batchTracking);
 		batchTrackingItem1.setBatchTrackingItemId(1L);
-		
-		BatchTrackingItem batchTrackingItem2 = new BatchTrackingItem();
-		batchTrackingItem2.setBatchTracking(batchTracking);
-		batchTrackingItem2.setBatchTrackingItemId(2L);
-		
-		List<BatchTrackingItem> batchTrackingItems = new ArrayList<>();
-		batchTrackingItems.add(batchTrackingItem1);
-		batchTrackingItems.add(batchTrackingItem2);
 
-		given(this.batchTrackingService.getBatchTrackingItems(any(String.class), any(boolean.class)))
-				.willReturn(batchTrackingItems);
+		Page<BatchTrackingItem> batchTrackingItemPage = buildPage(Arrays.asList(batchTrackingItem1));
+		ArgumentCaptor<BatchTrackingItemCriteria> captor = ArgumentCaptor
+				.forClass(BatchTrackingItemCriteria.class);
+
+		given(this.batchTrackingService.getBatchTrackingItems(any(BatchTrackingItemCriteria.class)))
+						.willReturn(batchTrackingItemPage);
+		
 		// Actual
 		ResponseSpec action = webClient.get()
-				.uri(uriBuilder -> uriBuilder.path("/v1/batches/UID1").queryParam("completed", true).build()).exchange();
+				.uri(uriBuilder -> uriBuilder.path("/v1/batches/UID1/details").queryParam("completed", true).build()).exchange();
 		// Assert
+		
 		action.expectStatus().isOk();
-		verify(batchTrackingService, times(1)).getBatchTrackingItems(batchTracking.getId(),true);
+
+		verify(batchTrackingService, times(1)).getBatchTrackingItems(captor.capture());
+
+		BatchTrackingItemCriteria actualBatchTrackingItem = captor.getValue();
+		assertThat(actualBatchTrackingItem.getBatchTrackingId(), is("UID1"));
+		
 	}
 }

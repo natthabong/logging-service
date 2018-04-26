@@ -9,8 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
+import gec.scf.logging.batch.criteria.BatchTrackingItemCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
-import gec.scf.logging.batch.domain.BatchTrackingItem;
 import gec.scf.logging.batch.domain.BatchTrackingItemRepository;
 import gec.scf.logging.batch.domain.BatchTrackingRepository;
 
@@ -114,38 +112,24 @@ public class BatchTrackingServiceTest {
 	@Test
 	public void should_get_batch_trackings_items() {
 		// Arrange
-		BatchTracking batchTracking = new BatchTracking();
-		batchTracking.setId("UID1");
-		batchTracking.setReferenceId("REF01");
-		batchTracking.setProcessNo("PID01");
-		batchTracking.setAction("START_BATCH_JOB_IMPORT_FILE");
-		LocalDateTime requestTime = LocalDateTime.of(2018, 5, 22, 23, 50);
-		batchTracking.setActionTime(requestTime);
-		batchTracking.setCompleted(true);
-		batchTracking.setNode("Batch");
-		batchTracking.setIpAddress("127.0.0.1");
-			
-		BatchTrackingItem batchTrackingItem1 = new BatchTrackingItem();
-		batchTrackingItem1.setBatchTracking(batchTracking);
-		batchTrackingItem1.setBatchTrackingItemId(1L);
-		
-		BatchTrackingItem batchTrackingItem2 = new BatchTrackingItem();
-		batchTrackingItem2.setBatchTracking(batchTracking);
-		batchTrackingItem2.setBatchTrackingItemId(2L);
-		
-		List<BatchTrackingItem> batchTrackingItems = new ArrayList<>();
-		batchTrackingItems.add(batchTrackingItem1);
-		batchTrackingItems.add(batchTrackingItem2);
+		ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
 
-		given(this.batchTrackingItemRepository.findByBatchTrackingIdAndCompleted(any(String.class), any(boolean.class)))
-						.willReturn(batchTrackingItems);
-		
+		BatchTrackingItemCriteria batchTrackingItemCriteria = mock(BatchTrackingItemCriteria.class);
+		given(batchTrackingItemCriteria.getBatchTrackingId()).willReturn("J01");
+		given(batchTrackingItemCriteria.isCompleted()).willReturn(true);
+
+		Pageable pageRequest = PageRequest.of(0, 20);
+		given(batchTrackingItemCriteria.getPageable()).willReturn(pageRequest);
+
 		// Actual
-		List<BatchTrackingItem> actual = batchTrackingService.getBatchTrackingItems("UID1",true);
+		batchTrackingService.getBatchTrackingItems(batchTrackingItemCriteria);
 
 		// Assert
-		verify(batchTrackingItemRepository, times(1)).findByBatchTrackingIdAndCompleted("UID1",true);
-		assertThat(actual.get(0).getBatchTracking().getId(), is("UID1"));
+		verify(batchTrackingItemRepository, times(1)).findAll(any(), captor.capture());
+
+		Pageable actualPage = captor.getValue();
+		assertThat(actualPage.getPageSize(), is(20));
+		assertThat(actualPage.getPageNumber(), is(0));
 	}
 
 	@TestConfiguration
