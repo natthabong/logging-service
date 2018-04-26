@@ -13,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +29,7 @@ import gec.scf.logging.batch.client.ServiceTypes;
 import gec.scf.logging.batch.client.payload.BatchTrackingPayload;
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
+import gec.scf.logging.batch.domain.BatchTrackingItem;
 import gec.scf.logging.batch.service.BatchTrackingService;
 import gec.scf.logging.batch.util.PaginationUtil;
 import reactor.core.publisher.Mono;
@@ -102,5 +105,16 @@ public class BatchTrackingController {
 		}
 
 		return remoteAddr;
+	}
+	
+	@JsonView(View.Partial.class)
+	@RequestMapping(value = "/{batchTrackingId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getBatchTrackingItems(@PathVariable String batchTrackingId,
+			@RequestParam(required = true) boolean completed) {
+
+		List<BatchTrackingItem> batchTrackingItems = batchTrackingService.getBatchTrackingItems(batchTrackingId,
+				completed);
+
+		return new ResponseEntity<>(batchTrackingItems, HttpStatus.OK);
 	}
 }

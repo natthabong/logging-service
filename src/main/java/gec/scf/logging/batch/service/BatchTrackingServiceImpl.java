@@ -1,8 +1,10 @@
 package gec.scf.logging.batch.service;
 
-import static gec.scf.logging.batch.util.SpecificationUtils.*;
 import static gec.scf.logging.batch.util.SpecificationUtils.eq;
+import static gec.scf.logging.batch.util.SpecificationUtils.timeBetween;
 import static org.springframework.data.jpa.domain.Specification.where;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gec.scf.logging.batch.criteria.BatchTrackingCriteria;
 import gec.scf.logging.batch.domain.BatchTracking;
+import gec.scf.logging.batch.domain.BatchTrackingItem;
+import gec.scf.logging.batch.domain.BatchTrackingItemRepository;
 import gec.scf.logging.batch.domain.BatchTrackingRepository;
 import gec.scf.logging.batch.util.SpecificationUtils;
 import reactor.core.publisher.Mono;
@@ -20,10 +24,14 @@ import reactor.core.publisher.Mono;
 public class BatchTrackingServiceImpl implements BatchTrackingService {
 
 	private BatchTrackingRepository batchTrackingRepository;
+	
+	private BatchTrackingItemRepository batchTrackingItemRepository;
 
 	public BatchTrackingServiceImpl(
-			@Autowired BatchTrackingRepository batchTrackingRepository) {
+			@Autowired BatchTrackingRepository batchTrackingRepository,
+			@Autowired BatchTrackingItemRepository batchTrackingItemRepository) {
 		this.batchTrackingRepository = batchTrackingRepository;
+		this.batchTrackingItemRepository = batchTrackingItemRepository;
 	}
 
 	@Transactional(readOnly = false)
@@ -44,9 +52,19 @@ public class BatchTrackingServiceImpl implements BatchTrackingService {
 						.and(timeBetween("actionTime", batchTrackingCriteria.getLogDateFrom(),
 												   batchTrackingCriteria.getLogDateTo()));
 		// @formatter:on
-		Page<BatchTracking> remittanceAdvices = batchTrackingRepository
+		Page<BatchTracking> batchTrackings = batchTrackingRepository
 				.findAll(specifications, batchTrackingCriteria.getPageable());
-		return remittanceAdvices;
+		return batchTrackings;
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<BatchTrackingItem> getBatchTrackingItems(String batchTrackingId, boolean isCompleted) {
+
+		List<BatchTrackingItem> batchTrackingItems = batchTrackingItemRepository
+				.findByBatchTrackingIdAndCompleted(batchTrackingId, isCompleted);
+
+		return batchTrackingItems;
 	}
 
 }
