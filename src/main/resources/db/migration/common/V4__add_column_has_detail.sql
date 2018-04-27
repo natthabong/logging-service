@@ -1,0 +1,1 @@
+ALTER TABLE tbl_batch_tracking ADD has_detail BIT NOT NULL default 0;

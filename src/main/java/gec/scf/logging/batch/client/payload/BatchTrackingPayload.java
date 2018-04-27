@@ -13,6 +13,8 @@ public class BatchTrackingPayload implements Serializable {
 	private String processNo;
 
 	private String action;
+	
+	private boolean hasDetail;
 
 	boolean completed;
 
@@ -69,6 +71,14 @@ public class BatchTrackingPayload implements Serializable {
 
 	public void setItems(List<? extends BatchTrackingItemPayload> items) {
 		this.items = items;
+	}
+
+	public boolean isHasDetail() {
+		return hasDetail;
+	}
+
+	public void setHasDetail(boolean hasDetail) {
+		this.hasDetail = hasDetail;
 	}
 
 }

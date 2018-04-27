@@ -72,6 +72,7 @@ public class BatchTrackerBuilder {
 				payload.setParameters(parameters);
 				payload.setCompleted(!incomplete);
 				payload.setItems(items);
+				payload.setHasDetail(items.size() > 0);
 				client.writeBatchTracking(payload);
 				action = null;
 				parameters = new HashMap<>();

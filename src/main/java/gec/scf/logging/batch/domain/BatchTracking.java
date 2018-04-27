@@ -77,6 +77,15 @@ public class BatchTracking extends BatchTrackingPayload {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "batchTracking")
 	private List<BatchTrackingItem> items = new ArrayList<>();
 
+	@JsonView({ View.Partial.class })
+	@Column(name = "has_detail")
+	private boolean hasDetail;
+
+	@Override
+	public boolean isHasDetail() {
+		return hasDetail;
+	}
+
 	public LocalDateTime getActionTime() {
 		return actionTime;
 	}
@@ -111,6 +120,7 @@ public class BatchTracking extends BatchTrackingPayload {
 		batchTracking.setParameters(payload.getParameters());
 
 		if (payload.getItems() != null) {
+			batchTracking.setHasDetail(payload.getItems().size() > 0);
 			batchTracking.getItems().addAll(payload.getItems().stream().map(i -> {
 				BatchTrackingItem item = new BatchTrackingItem();
 				item.setActionTime(i.getActionTime());
@@ -177,6 +187,10 @@ public class BatchTracking extends BatchTrackingPayload {
 
 	public List<BatchTrackingItem> getItems() {
 		return items;
+	}
+
+	public void setHasDetail(boolean hasDetail) {
+		this.hasDetail = hasDetail;
 	}
 
 }
